@@ -3,25 +3,29 @@
     <v-row align="center">
       <v-col>
         <v-card width="400" class="mx-auto mt-10">
-          <v-card-title class="text-center my-4 text-lg-h4">Login</v-card-title>
+          <v-card-title class="text-center my-4 text-lg-h4">Create A Login</v-card-title>
           <v-form class="mx-5 text-center">
             <v-text-field
-              v-model="username"
-              label="Username"
-              required
+                v-model="username"
+                label="Username"
+                required
             ></v-text-field>
             <v-text-field
-              v-model="password"
-              label="Password"
-              type="password"
-              required
+                v-model="email"
+                label="Email"
+                required
+            ></v-text-field>
+            <v-text-field
+                v-model="password"
+                label="Password"
+                type="password"
+                required
             ></v-text-field>
             <v-alert v-if="errorMessage"  class="mb-5" type="error" density="compact">{{ errorMessage }}</v-alert>
             <v-btn color="success" class="mx-auto mb-5" @click="validate">
               Submit
             </v-btn>
           </v-form>
-          <v-card-text class="text-center">To create an account, click <router-link to="/sign-in">here</router-link></v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -29,11 +33,12 @@
 </template>
 <script lang="ts">
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, email } from "@vuelidate/validators";
 import { defineComponent } from "vue";
 import { useUserStore } from "@/stores/user";
 import * as userService from "@/services/userService";
 import {setToken} from "@/utils/setToken"
+import {createNewUserLogin} from "@/services/userService";
 export default defineComponent({
   setup() {
     const userStore = useUserStore();
@@ -42,6 +47,7 @@ export default defineComponent({
   data() {
     return {
       username: '',
+      email: '',
       password: '',
       errorMessage: ''
     };
@@ -49,6 +55,7 @@ export default defineComponent({
   validations() {
     return {
       username: { required },
+      email: { required, email },
       password: { required },
     };
   },
@@ -57,9 +64,10 @@ export default defineComponent({
       const valid = await this.v$.$validate();
       this.errorMessage = ''
       if (valid) {
-        const response = await userService.userLogin(
-          this.username,
-          this.password
+        const response = await userService.createNewUserLogin(
+            this.username,
+            this.email,
+            this.password
         );
         if (!response.error) {
           setToken(response.id_token)
@@ -70,6 +78,7 @@ export default defineComponent({
           this.errorMessage = response.message
         }
       } else {
+        this.errorMessage = 'Missing required field(s)'
       }
     },
   },
