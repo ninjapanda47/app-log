@@ -1,34 +1,105 @@
 <template>
-<div>
-  <EasyDataTable
-      :headers="headers"
-      :items="applications"
-  />
-</div>
+  <div>
+    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications"  @click-row="setAppToUpdate">
+      <template #item-dateApplied="{ dateApplied }">
+        {{ formatDate(dateApplied) }}
+      </template>
+      <template #item-status="item"> <StatusChip :app="item"></StatusChip></template>
+      <template #item-action="item">
+        <v-btn
+            size="x-small"
+              icon="mdi-pencil"
+              color="success"
+            @click="setAppToUpdate(item)"
+        ></v-btn>
+      </template>
+    </EasyDataTable>
+    <div>
+      <v-dialog
+          v-model="dialog"
+      >
+      <ApplicationUpdateView class="updateForm" @close="dialog = false"/></v-dialog>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useUserStore } from "@/stores/user";
-import type { Header, Item } from "vue3-easy-data-table";
+import { useApplicationStore} from "@/stores/application";
+import type { AppInfo } from "@/stores/application"
+import dayjs from "dayjs";
+import ApplicationUpdateView from "@/views/ApplicationUpdateView.vue";
+import StatusChip from "@/views/StatusChip.vue";
 
 export default defineComponent({
   setup() {
-    const userStore = useUserStore();
-    return { userStore };
+    const applicationStore = useApplicationStore();
+    return { applicationStore };
+  },
+  components: {
+    ApplicationUpdateView, StatusChip
+  },
+  async mounted() {
+    await this.applicationStore.fetchAndSetApplications();
   },
   data() {
     return {
+      dialog: false,
       headers: [
-        {text: "Company Name", value: "companyName"},
-        {text: "Job Title", value: "jobTitle"},
-        {text: "Job Url", value: "jobUrl"},
-        {text: "Date Applied", value: "dateApplied", sortable: true},
-        {text: "Status", value: "status", sortable: true},
-        {text: "Notes", value: "notes"},
+        { text: "Company Name", value: "companyName" },
+        { text: "Job Title", value: "jobTitle" },
+        { text: "Job Url", value: "jobUrl" },
+        { text: "Date Applied", value: "dateApplied", sortable: true },
+        { text: "Status", value: "status", sortable: true },
+        { text: "Action", value: 'action'}
       ],
-      applications: [],
     };
   },
-  methods: {},
+  methods: {
+    setAppToUpdate(item: AppInfo) {
+      this.applicationStore.setApplicationToUpdate(item)
+      this.dialog = true
+    },
+    formatDate(dateString: string) {
+      if (dateString) {
+        const date = dayjs(dateString);
+        return date.format("MM/DD/YYYY");
+      }
+      else {
+        return ''
+      }
+    },
+  },
 });
 </script>
+<style>
+.customize-table {
+  --easy-table-border: 1px solid #bbbbbb;
+  --easy-table-row-border: 1px solid #bbbbbb;
+
+  --easy-table-header-font-size: 14px;
+  --easy-table-header-height: 50px;
+  --easy-table-header-font-color: #a2a2a2;
+  --easy-table-header-background-color: #212121;
+
+  --easy-table-header-item-padding: 10px 15px;
+
+  --easy-table-body-even-row-font-color: #a2a2a2;
+  --easy-table-body-even-row-background-color: #212121;
+
+  --easy-table-body-row-font-color: #a2a2a2;
+  --easy-table-body-row-background-color: #212121;
+  --easy-table-body-row-height: 50px;
+  --easy-table-body-row-font-size: 14px;
+
+  --easy-table-body-item-padding: 10px 15px;
+
+  --easy-table-footer-background-color: #212121;
+  --easy-table-footer-font-color: #a2a2a2;
+  --easy-table-footer-font-size: 14px;
+  --easy-table-footer-padding: 0px 10px;
+  --easy-table-footer-height: 50px;
+
+  --easy-table-rows-per-page-selector-width: 70px;
+  --easy-table-rows-per-page-selector-option-padding: 10px;
+}
+</style>

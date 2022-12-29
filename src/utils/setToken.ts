@@ -1,3 +1,3 @@
 export const setToken = (token: string) => {
-    localStorage.setItem('access-token', token);
+    localStorage.setItem('user-token', token);
 }

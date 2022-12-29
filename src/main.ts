@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { useUserStore } from "@/stores/user";
+import dayjs from 'dayjs'
 
 import App from "./App.vue";
 import router from "./router";
@@ -26,6 +27,7 @@ app.use(createPinia());
 app.use(router);
 app.use(vuetify)
 app.component('EasyDataTable', Vue3EasyDataTable);
+app.config.globalProperties.$dayjs = dayjs
 
 const userStore = useUserStore();
 

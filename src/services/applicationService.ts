@@ -1,12 +1,19 @@
-import { Headers } from "node-fetch";
 const api = "http://localhost:3000/application";
 
 let token = localStorage.getItem("user-token");
 
 const headers = new Headers();
 
-headers.set("Authorization", `Bearer ${token}`);
-headers.set("Content-Type", "application/json");
+headers.append("Authorization", `Bearer ${token}`);
+headers.append("Content-Type", "application/json");
+
+export const getApplications = async () => {
+  let response = await fetch(`${api}`, {
+    method: "GET",
+    headers,
+  });
+  return await response.json();
+};
 
 // create new application
 export const addNewApplication = async (application: object) => {
@@ -15,18 +22,16 @@ export const addNewApplication = async (application: object) => {
     headers,
     body: JSON.stringify(application),
   });
-  let data = await response.json();
-  console.log(data);
-  return data;
+  const data = await response.json()
+  console.log('in service', data)
+  return data
 };
 
 export const updateApplication = async (id: string, update: object) => {
   let response = await fetch(`${api}/${id}`, {
     method: "PUT",
     headers,
-    body: JSON.stringify({update}),
+    body: JSON.stringify({ update }),
   });
-  let data = await response.json();
-  console.log(data);
-  return data;
+  return await response.json();
 };
