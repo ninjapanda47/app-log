@@ -1,10 +1,14 @@
 <template>
   <div>
-    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications"  @click-row="setAppToUpdate">
+    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications">
       <template #item-dateApplied="{ dateApplied }">
         {{ formatDate(dateApplied) }}
       </template>
-      <template #item-status="item"> <StatusChip :app="item"></StatusChip></template>
+      <template #item-status="item"> <status-chip :app="item"></status-chip></template>
+      <template #item-jobUrl="item"> <a
+          :href="item.jobUrl">
+        {{item.jobUrl}}
+      </a></template>
       <template #item-action="item">
         <v-btn
             size="x-small"
@@ -83,15 +87,14 @@ export default defineComponent({
 
   --easy-table-header-item-padding: 10px 15px;
 
-  --easy-table-body-even-row-font-color: #a2a2a2;
-  --easy-table-body-even-row-background-color: #212121;
-
   --easy-table-body-row-font-color: #a2a2a2;
   --easy-table-body-row-background-color: #212121;
   --easy-table-body-row-height: 50px;
   --easy-table-body-row-font-size: 14px;
 
   --easy-table-body-item-padding: 10px 15px;
+  --easy-table-body-row-hover-font-color: #a2a2a2;
+  --easy-table-body-row-hover-background-color: #212121;
 
   --easy-table-footer-background-color: #212121;
   --easy-table-footer-font-color: #a2a2a2;

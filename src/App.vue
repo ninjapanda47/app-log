@@ -26,6 +26,7 @@
     </v-navigation-drawer>
 
     <v-main class="main-wrapper">
+      <error-dialog></error-dialog>
       <router-view></router-view>
     </v-main>
     <v-footer>
@@ -47,6 +48,7 @@
 import { defineComponent, ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import ErrorDialog from "@/views/ErrorDialog.vue";
 
 export default defineComponent({
   setup() {
@@ -56,6 +58,7 @@ export default defineComponent({
   components: {
     RouterView,
     RouterLink,
+    ErrorDialog
   },
   computed: {
     personalizedMessage() {

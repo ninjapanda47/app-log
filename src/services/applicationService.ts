@@ -22,9 +22,7 @@ export const addNewApplication = async (application: object) => {
     headers,
     body: JSON.stringify(application),
   });
-  const data = await response.json()
-  console.log('in service', data)
-  return data
+  return await response.json()
 };
 
 export const updateApplication = async (id: string, update: object) => {

@@ -26,7 +26,7 @@ export default defineComponent({
   },
   components: {
     ApplicationTable,
-    ApplicationForm
+    ApplicationForm,
   },
   data() {
     return {
