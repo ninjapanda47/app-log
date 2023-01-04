@@ -1,8 +1,9 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import * as applicationService from "@/services/applicationService";
+import * as reportService from "@/services/reportService"
 import { useUserStore } from "@/stores/user";
-
+import dayjs, {Dayjs} from 'dayjs'
 
 export interface AppInfo {
   _id: string;
@@ -13,6 +14,7 @@ export interface AppInfo {
   dateApplied: string;
   status: string;
   notes?: string;
+  flag?: boolean;
 }
 
 export interface ErrorInfo {
@@ -20,33 +22,84 @@ export interface ErrorInfo {
   error: string;
   message: string;
 }
+
+export interface DateInfo {
+  startDate: string |  Date ;
+  endDate: string |  Date ;
+}
+
+export interface ReportInfo {
+  total: number;
+  rejectedCount: number;
+  inProcessCount: number;
+}
+
 export const useApplicationStore = defineStore("application", () => {
   const userStore = useUserStore();
   // ref is basically state in vuex
   const applications = ref([] as AppInfo[]);
   const application = ref({} as AppInfo);
-  const apiError = ref({} as ErrorInfo)
-  const hasError = ref(false)
+  const apiError = ref({} as ErrorInfo);
+  const hasError = ref(false);
+  const dateFilter = ref({
+    startDate: dayjs().subtract(30, "day").toDate(),
+    endDate: dayjs().toDate(),
+  } as DateInfo);
+   const report = ref ({
+     total: 0,
+     rejectedCount: 0,
+     inProcessCount: 0
+   } as ReportInfo)
 
   // computed is getters
 
   // action
-
-  const fetchAndSetApplications = async () => {
+  const fetchAndSetReport = async () => {
+    const formattedDate = {
+      startDate: dayjs(dateFilter.value.startDate).format('MM-DD-YYYY'),
+      endDate: dayjs(dateFilter.value.endDate).format('MM-DD-YYYY')
+    }
     try {
-      const response = await applicationService.getApplications();
-      if (response.applications) {
-        applications.value = response.applications
-      }
-      else {
-        const { statusCode, error, message} = response
+      const response = await reportService.getJobReport(
+          formattedDate
+      );
+      if (response.total) {
+        report.value = response;
+      } else {
+        const { statusCode, error, message } = response;
         if (statusCode === 401) {
           userStore.unsetUser();
         }
-        hasError.value = true
-        apiError.value.statusCode = statusCode
-        apiError.value.error = error
-        apiError.value.message = message
+        hasError.value = true;
+        apiError.value.statusCode = statusCode;
+        apiError.value.error = error;
+        apiError.value.message = message;
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+
+  const fetchAndSetApplications = async () => {
+    try {
+      const formattedDate = {
+        startDate: dayjs(dateFilter.value.startDate).format('MM-DD-YYYY'),
+        endDate: dayjs(dateFilter.value.endDate).format('MM-DD-YYYY')
+      }
+      const response = await applicationService.getApplications(
+          formattedDate
+      );
+      if (response.applications) {
+        applications.value = response.applications;
+      } else {
+        const { statusCode, error, message } = response;
+        if (statusCode === 401) {
+          userStore.unsetUser();
+        }
+        hasError.value = true;
+        apiError.value.statusCode = statusCode;
+        apiError.value.error = error;
+        apiError.value.message = message;
       }
     } catch (error) {
       return error;
@@ -62,24 +115,24 @@ export const useApplicationStore = defineStore("application", () => {
   };
 
   const clearApiError = () => {
-    hasError.value = false
-    apiError.value = {} as ErrorInfo
-  }
+    hasError.value = false;
+    apiError.value = {} as ErrorInfo;
+  };
 
   const addApplication = async (app: object) => {
     try {
-        const response = await applicationService.addNewApplication(app);
+      const response = await applicationService.addNewApplication(app);
       if (response.newApplication) {
         applications.value.push(response.newApplication);
       } else {
-        const { statusCode, error, message} = response
+        const { statusCode, error, message } = response;
         if (statusCode === 401) {
           userStore.unsetUser();
         }
-        hasError.value = true
-        apiError.value.statusCode = statusCode
-        apiError.value.error = error
-        apiError.value.message = message
+        hasError.value = true;
+        apiError.value.statusCode = statusCode;
+        apiError.value.error = error;
+        apiError.value.message = message;
       }
     } catch (error) {
       return error;
@@ -88,21 +141,18 @@ export const useApplicationStore = defineStore("application", () => {
 
   const updateApplication = async (id: string, update: object) => {
     try {
-      const response = await applicationService.updateApplication(
-        id,
-        update
-      );
+      const response = await applicationService.updateApplication(id, update);
       if (response.success) {
-          await fetchAndSetApplications()
+        await fetchAndSetApplications();
       } else {
-        const { statusCode, error, message} = response
+        const { statusCode, error, message } = response;
         if (statusCode === 401) {
           userStore.unsetUser();
         }
-        hasError.value = true
-        apiError.value.statusCode = statusCode
-        apiError.value.error = error
-        apiError.value.message = message
+        hasError.value = true;
+        apiError.value.statusCode = statusCode;
+        apiError.value.error = error;
+        apiError.value.message = message;
       }
     } catch (error) {
       return error;
@@ -116,11 +166,14 @@ export const useApplicationStore = defineStore("application", () => {
     application,
     apiError,
     hasError,
+    report,
+    dateFilter,
     fetchAndSetApplications,
     addApplication,
     updateApplication,
     setApplicationToUpdate,
     clearApplicationToUpdate,
     clearApiError,
+    fetchAndSetReport
   };
 });

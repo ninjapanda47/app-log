@@ -64,7 +64,7 @@ export default defineComponent({
         if (!response.error) {
           setToken(response.id_token)
           this.userStore.setUser(response.user)
-          this.$router.push('application-log')
+          this.$router.push('reports')
         }
         else {
           this.errorMessage = response.message

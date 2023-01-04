@@ -1,3 +1,5 @@
+import type {DateInfo} from "@/stores/application";
+
 const api = "http://localhost:3000/application";
 
 let token = localStorage.getItem("user-token");
@@ -7,8 +9,9 @@ const headers = new Headers();
 headers.append("Authorization", `Bearer ${token}`);
 headers.append("Content-Type", "application/json");
 
-export const getApplications = async () => {
-  let response = await fetch(`${api}`, {
+
+export const getApplications = async (dateFilter: DateInfo ) => {
+  let response = await fetch(`${api}/${dateFilter.startDate}/${dateFilter.endDate}`, {
     method: "GET",
     headers,
   });

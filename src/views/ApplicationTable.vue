@@ -1,21 +1,20 @@
 <template>
   <div>
-    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications">
+    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications" :sort-by="sortBy"
+                    :sort-type="sortType">
       <template #item-dateApplied="{ dateApplied }">
         {{ formatDate(dateApplied) }}
       </template>
       <template #item-status="item"> <status-chip :app="item"></status-chip></template>
-      <template #item-jobUrl="item"> <a
-          :href="item.jobUrl">
-        {{item.jobUrl}}
-      </a></template>
+      <template #item-jobUrl="item"><custom-link :app="item"></custom-link></template>
       <template #item-action="item">
         <v-btn
             size="x-small"
               icon="mdi-pencil"
               color="success"
+            class="mr-2"
             @click="setAppToUpdate(item)"
-        ></v-btn>
+        ></v-btn> <v-icon color="pink" v-if="item.flag" icon="mdi-star"></v-icon>
       </template>
     </EasyDataTable>
     <div>
@@ -33,6 +32,7 @@ import type { AppInfo } from "@/stores/application"
 import dayjs from "dayjs";
 import ApplicationUpdateView from "@/views/ApplicationUpdateView.vue";
 import StatusChip from "@/views/StatusChip.vue";
+import CustomLink from "@/views/CustomLink.vue";
 
 export default defineComponent({
   setup() {
@@ -40,7 +40,7 @@ export default defineComponent({
     return { applicationStore };
   },
   components: {
-    ApplicationUpdateView, StatusChip
+    ApplicationUpdateView, StatusChip, CustomLink
   },
   async mounted() {
     await this.applicationStore.fetchAndSetApplications();
@@ -48,10 +48,12 @@ export default defineComponent({
   data() {
     return {
       dialog: false,
+      sortBy: "dateApplied",
+      sortType: "desc",
       headers: [
-        { text: "Company Name", value: "companyName" },
-        { text: "Job Title", value: "jobTitle" },
-        { text: "Job Url", value: "jobUrl" },
+        { text: "Company Name", value: "companyName", width: 150 },
+        { text: "Job Title", value: "jobTitle", width: 200 },
+        { text: "Job Url", value: "jobUrl", width: 400 },
         { text: "Date Applied", value: "dateApplied", sortable: true },
         { text: "Status", value: "status", sortable: true },
         { text: "Action", value: 'action'}

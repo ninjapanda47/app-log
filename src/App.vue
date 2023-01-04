@@ -13,6 +13,11 @@
     >
       <v-list density="compact" nav>
         <v-list-item
+            prepend-icon="mdi-chart-box-outline"
+            title="Reports"
+            to="reports"
+        ></v-list-item>
+        <v-list-item
           prepend-icon="mdi-folder-table"
           title="Tracker"
           to="application-log"

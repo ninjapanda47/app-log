@@ -5,7 +5,7 @@
         <v-card-text>
           <div>
             <v-row
-              ><v-col col="4"></v-col>
+              ><v-col col="4"> <v-checkbox label="Flag" v-model="flag"></v-checkbox></v-col>
               <v-col col="4"></v-col>
               <v-col col="4" class="d-flex justify-end"
                 ><v-select
@@ -61,12 +61,14 @@ export default defineComponent({
     this.id = this.applicationStore.application?._id;
     this.status = this.applicationStore.application?.status;
     this.notes = this.applicationStore.application?.notes || "";
+    this.flag = this.applicationStore.application?.flag || false
   },
   data() {
     return {
       id: "",
       status: "",
       notes: "",
+      flag: false
     };
   },
   methods: {
@@ -78,6 +80,7 @@ export default defineComponent({
       const update = {
         status: this.status,
         notes: this.notes,
+        flag: this.flag
       };
       await this.applicationStore.updateApplication(this.id, update);
       this.closeDialog()
