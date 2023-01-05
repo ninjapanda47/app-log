@@ -1,5 +1,5 @@
 <template>
-  <v-app theme="dark">
+  <v-app>
     <v-app-bar title="Application Tracker"
       ><template v-slot:prepend v-if="userStore.isAuthenticated">
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -40,7 +40,7 @@
           {{ new Date().getFullYear() }} —
           <strong
             >Made with
-            <v-icon icon="mdi-heart-outline" color="pink"></v-icon> by
+            <v-icon icon="mdi-heart" color="secondary"></v-icon> by
             NinjaPanda</strong
           >
         </v-col>

@@ -17,7 +17,7 @@
               required
             ></v-text-field>
             <v-alert v-if="errorMessage"  class="mb-5" type="error" density="compact">{{ errorMessage }}</v-alert>
-            <v-btn color="success" class="mx-auto mb-5" @click="validate">
+            <v-btn color="primary" class="mx-auto mb-5" @click="validate">
               Submit
             </v-btn>
           </v-form>

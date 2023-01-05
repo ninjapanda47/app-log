@@ -14,7 +14,7 @@
               color="success"
             class="mr-2"
             @click="setAppToUpdate(item)"
-        ></v-btn> <v-icon color="pink" v-if="item.flag" icon="mdi-star"></v-icon>
+        ></v-btn> <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
       </template>
     </EasyDataTable>
     <div>

@@ -33,13 +33,13 @@
         <div>
           <v-row class="mx-2 mb-2">
             <v-col col="6">
-              <v-btn color="#2296f3" @click="updateApplication"
+              <v-btn color="info" @click="updateApplication"
                 >Update</v-btn
               ></v-col
             >
             <v-col col="6" class="d-flex justify-end">
-              <v-btn color="#2296f3" variant="outlined" @click="closeDialog"
-                >Close Dialog</v-btn
+              <v-btn color="info" variant="outlined" @click="closeDialog"
+                >Close</v-btn
               ></v-col
             >
           </v-row>

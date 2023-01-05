@@ -12,7 +12,7 @@
           {{ applicationStore.apiError.message }}
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" block @click="applicationStore.clearApiError"
+          <v-btn color="primary" block @click="resetError"
             >Close</v-btn
           >
         </v-card-actions>

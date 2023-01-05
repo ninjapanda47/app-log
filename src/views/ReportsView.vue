@@ -15,15 +15,14 @@
         >
       </v-row>
       <v-row class="mx-5">
-        <v-col col="4" class="d-flex justify-center"><v-card class="scoreCard" variant="outlined"><h2>Total Application: {{ applicationStore.report.total }}</h2></v-card></v-col>
+        <v-col col="4" class="d-flex justify-center"><v-card class="scoreCard" variant="outlined" color="primary"><h2>Total Application: {{ applicationStore.report.total }}</h2></v-card></v-col>
         <v-col col="4" class="d-flex justify-center"> <v-card
             class="scoreCard"
-            color="#708090"
-            theme="dark"
+            color="primary"
         ><h2 class="my-auto">Application In Process: {{ applicationStore.report.inProcessCount }}</h2></v-card></v-col>
         <v-col col="4" class="d-flex justify-center"><v-card
             class="scoreCard"
-            color="#DC143C"
+            color="warning"
             theme="dark"
         ><h2>Rejection: {{ applicationStore.report.rejectedCount }}</h2></v-card></v-col>
       </v-row>

@@ -1,5 +1,5 @@
 <template>
-<v-chip :color="color">{{ app.status }}</v-chip>
+  <div :class="color">{{ app.status }}</div>
 </template>
 <script lang="ts">
 import { useVuelidate } from "@vuelidate/core";
@@ -11,27 +11,51 @@ export default defineComponent({
     return { v$: useVuelidate(), userStore };
   },
   props: {
-    app: Object
+    app: Object,
   },
   data() {
-    return {
-
-    };
+    return {};
   },
   computed: {
     color() {
-      if (this.app?.status === ('Applied' || 'In Process')){
-        return 'yellow'
-      } else if (this.app?.status === 'Received Offer') {
-        return 'green'
-      }
-      else {
-        return 'red'
+      if (this.app?.status === "Applied") {
+        return "chip gray";
+      } else if (this.app?.status === "In Process") {
+        return "chip blue";
+      } else if (this.app?.status === "Received Offer") {
+        return "chip green";
+      } else {
+        return "chip red";
       }
     },
   },
-  methods: {
-
-  },
+  methods: {},
 });
 </script>
+<style>
+.chip {
+  display: inline-block;
+  padding: 0 12px;
+  height: 32px;
+  font-size: 0.875rem;
+  line-height: 30px;
+  border-radius: 20px;
+  color: white;
+}
+
+.gray {
+  background-color: gray;
+}
+
+.green {
+  background-color: #00bc8c;
+}
+
+.red {
+  background-color: #dc143c;
+}
+
+.blue {
+  background-color: #2296f3;
+}
+</style>

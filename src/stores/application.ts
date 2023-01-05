@@ -1,9 +1,9 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import * as applicationService from "@/services/applicationService";
-import * as reportService from "@/services/reportService"
+import * as reportService from "@/services/reportService";
 import { useUserStore } from "@/stores/user";
-import dayjs, {Dayjs} from 'dayjs'
+import dayjs, { Dayjs } from "dayjs";
 
 export interface AppInfo {
   _id: string;
@@ -24,8 +24,8 @@ export interface ErrorInfo {
 }
 
 export interface DateInfo {
-  startDate: string |  Date ;
-  endDate: string |  Date ;
+  startDate: string | Date;
+  endDate: string | Date;
 }
 
 export interface ReportInfo {
@@ -43,26 +43,24 @@ export const useApplicationStore = defineStore("application", () => {
   const hasError = ref(false);
   const dateFilter = ref({
     startDate: dayjs().subtract(30, "day").toDate(),
-    endDate: dayjs().toDate(),
+    endDate: dayjs().add(1, "day").toDate(),
   } as DateInfo);
-   const report = ref ({
-     total: 0,
-     rejectedCount: 0,
-     inProcessCount: 0
-   } as ReportInfo)
+  const report = ref({
+    total: 0,
+    rejectedCount: 0,
+    inProcessCount: 0,
+  } as ReportInfo);
 
   // computed is getters
 
   // action
   const fetchAndSetReport = async () => {
     const formattedDate = {
-      startDate: dayjs(dateFilter.value.startDate).format('MM-DD-YYYY'),
-      endDate: dayjs(dateFilter.value.endDate).format('MM-DD-YYYY')
-    }
+      startDate: dayjs(dateFilter.value.startDate).format("MM-DD-YYYY"),
+      endDate: dayjs(dateFilter.value.endDate).format("MM-DD-YYYY"),
+    };
     try {
-      const response = await reportService.getJobReport(
-          formattedDate
-      );
+      const response = await reportService.getJobReport(formattedDate);
       if (response.total) {
         report.value = response;
       } else {
@@ -78,17 +76,11 @@ export const useApplicationStore = defineStore("application", () => {
     } catch (error) {
       return error;
     }
-  }
+  };
 
   const fetchAndSetApplications = async () => {
     try {
-      const formattedDate = {
-        startDate: dayjs(dateFilter.value.startDate).format('MM-DD-YYYY'),
-        endDate: dayjs(dateFilter.value.endDate).format('MM-DD-YYYY')
-      }
-      const response = await applicationService.getApplications(
-          formattedDate
-      );
+      const response = await applicationService.getApplications();
       if (response.applications) {
         applications.value = response.applications;
       } else {
@@ -174,6 +166,6 @@ export const useApplicationStore = defineStore("application", () => {
     setApplicationToUpdate,
     clearApplicationToUpdate,
     clearApiError,
-    fetchAndSetReport
+    fetchAndSetReport,
   };
 });

@@ -10,8 +10,8 @@ headers.append("Authorization", `Bearer ${token}`);
 headers.append("Content-Type", "application/json");
 
 
-export const getApplications = async (dateFilter: DateInfo ) => {
-  let response = await fetch(`${api}/${dateFilter.startDate}/${dateFilter.endDate}`, {
+export const getApplications = async () => {
+  let response = await fetch(`${api}`, {
     method: "GET",
     headers,
   });

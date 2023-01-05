@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card width="500">
+    <v-card width="800px">
       <v-card-text class="my-4 text-center">
         <v-form class="mx-5 text-left">
           <v-text-field
@@ -30,9 +30,12 @@
           ></v-select>
           <v-textarea v-model="notes" label="Notes"></v-textarea>
         </v-form>
-        <v-btn color="#2296f3" class="text-center mb-5" @click="add">
+        <v-btn color="primary" class="text-center mb-5" @click="add">
           Submit
         </v-btn>
+        <v-btn color="primary" variant="outlined" class="mb-5 ml-2" @click="closeDialog"
+        >Close</v-btn
+        >
       </v-card-text>
     </v-card>
   </div>
@@ -64,6 +67,10 @@ export default defineComponent({
     };
   },
   methods: {
+    closeDialog() {
+      console.log('clicked')
+      this.$emit("close");
+    },
     async add() {
       const app = {
         userId: this.userStore.user._id,
