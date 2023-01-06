@@ -36,3 +36,12 @@ export const updateApplication = async (id: string, update: object) => {
   });
   return await response.json();
 };
+
+export const removeApplications = async (idsToRemove: Array<string>) => {
+  let response = await fetch(`${api}`, {
+    method: "DELETE",
+    headers,
+    body: JSON.stringify({ idsToRemove }),
+  });
+  return await response.json();
+};

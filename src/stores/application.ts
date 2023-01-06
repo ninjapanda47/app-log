@@ -4,6 +4,7 @@ import * as applicationService from "@/services/applicationService";
 import * as reportService from "@/services/reportService";
 import { useUserStore } from "@/stores/user";
 import dayjs, { Dayjs } from "dayjs";
+import {removeApplications} from "@/services/applicationService";
 
 export interface AppInfo {
   _id: string;
@@ -151,6 +152,26 @@ export const useApplicationStore = defineStore("application", () => {
     }
   };
 
+  const removeApplications = async (idsToRemove: Array<string>) => {
+    try {
+      const response = await applicationService.removeApplications(idsToRemove);
+      if (response.success) {
+        await fetchAndSetApplications();
+      } else {
+        const { statusCode, error, message } = response;
+        if (statusCode === 401) {
+          userStore.unsetUser();
+        }
+        hasError.value = true;
+        apiError.value.statusCode = statusCode;
+        apiError.value.error = error;
+        apiError.value.message = message;
+      }
+    } catch (error) {
+      return error;
+    }
+  }
+
   // add a bulk delete handler later
 
   return {
@@ -163,6 +184,7 @@ export const useApplicationStore = defineStore("application", () => {
     fetchAndSetApplications,
     addApplication,
     updateApplication,
+    removeApplications,
     setApplicationToUpdate,
     clearApplicationToUpdate,
     clearApiError,

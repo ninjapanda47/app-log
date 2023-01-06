@@ -1,28 +1,49 @@
 <template>
   <div>
-    <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications" :sort-by="sortBy"
-                    :sort-type="sortType">
-      <template #item-dateApplied="{ dateApplied }">
-        {{ formatDate(dateApplied) }}
-      </template>
-      <template #item-status="item"> <status-chip :app="item"></status-chip></template>
-      <template #item-jobUrl="item"><custom-link :app="item"></custom-link></template>
-      <template #item-action="item">
-        <v-btn
-            size="x-small"
-              icon="mdi-pencil"
-              color="success"
-            class="mr-2"
-            @click="setAppToUpdate(item)"
-        ></v-btn> <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
-      </template>
-    </EasyDataTable>
-    <div>
+    <v-row class="mt-5">
+      <v-col cols="6"> <v-tooltip text="Select applications to delete">
+        <template v-slot:activator="{ props }">
+          <v-btn  prepend-icon="mdi-minus"
+                  color="error"
+                  v-bind="props"
+                  @click="deleteApps">Delete</v-btn>
+        </template>
+      </v-tooltip>
+      </v-col>
+      <v-col cols="6" class="text-right">    <v-btn
+          prepend-icon="mdi-plus"
+          color="success"
+          @click="createDialog = true"    >Add</v-btn> </v-col>
+    </v-row>
+<v-row class="mb-5">
+  <v-col cols="12">   <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications" :sort-by="sortBy"
+                            :sort-type="sortType" v-model:items-selected="itemsSelected">
+    <template #item-dateApplied="{ dateApplied }">
+      {{ formatDate(dateApplied) }}
+    </template>
+    <template #item-status="item"> <status-chip :app="item"></status-chip></template>
+    <template #item-jobUrl="item"><custom-link :app="item"></custom-link></template>
+    <template #item-action="item">
+      <v-btn
+          size="x-small"
+          icon="mdi-pencil"
+          color="success"
+          class="mr-2"
+          @click="setAppToUpdate(item)"
+      ></v-btn> <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
+    </template>
+  </EasyDataTable></v-col>
+</v-row>
+    <v-row>
       <v-dialog
-          v-model="dialog"
+          v-model="updateDialog"
       >
-      <ApplicationUpdateView class="updateForm" @close="dialog = false"/></v-dialog>
-    </div>
+      <ApplicationUpdateView class="updateForm" @close="updateDialog = false"/></v-dialog>
+    </v-row>
+    <v-row justify="center"><v-dialog
+        scrollable
+        v-model="createDialog"
+    ><ApplicationForm @close="createDialog = false"/></v-dialog></v-row>
   </div>
 </template>
 <script lang="ts">
@@ -33,6 +54,7 @@ import dayjs from "dayjs";
 import ApplicationUpdateView from "@/views/ApplicationUpdateView.vue";
 import StatusChip from "@/views/StatusChip.vue";
 import CustomLink from "@/views/CustomLink.vue";
+import ApplicationForm from "@/views/ApplicationForm.vue";
 
 export default defineComponent({
   setup() {
@@ -40,16 +62,18 @@ export default defineComponent({
     return { applicationStore };
   },
   components: {
-    ApplicationUpdateView, StatusChip, CustomLink
+    ApplicationUpdateView, StatusChip, CustomLink, ApplicationForm
   },
   async mounted() {
     await this.applicationStore.fetchAndSetApplications();
   },
   data() {
     return {
-      dialog: false,
+      createDialog: false,
+      updateDialog: false,
       sortBy: "dateApplied",
       sortType: "desc",
+      itemsSelected: [] as AppInfo[],
       headers: [
         { text: "Company Name", value: "companyName", width: 150 },
         { text: "Job Title", value: "jobTitle", width: 200 },
@@ -63,7 +87,14 @@ export default defineComponent({
   methods: {
     setAppToUpdate(item: AppInfo) {
       this.applicationStore.setApplicationToUpdate(item)
-      this.dialog = true
+      this.updateDialog = true
+    },
+    async deleteApps() {
+      let idsToRemove = [] as string[]
+      this.itemsSelected.forEach((item) => {
+        idsToRemove.push(item._id)
+      })
+      await this.applicationStore.removeApplications(idsToRemove)
     },
     formatDate(dateString: string) {
       if (dateString) {

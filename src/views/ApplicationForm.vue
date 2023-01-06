@@ -68,7 +68,6 @@ export default defineComponent({
   },
   methods: {
     closeDialog() {
-      console.log('clicked')
       this.$emit("close");
     },
     async add() {
