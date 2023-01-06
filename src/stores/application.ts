@@ -80,7 +80,7 @@ export const useApplicationStore = defineStore("application", () => {
 
   const fetchAndSetApplications = async () => {
     try {
-      const response = await applicationService.getApplications();
+      const response = await applicationService.getApplications(userStore.user._id);
       if (response.applications) {
         applications.value = response.applications;
       } else {

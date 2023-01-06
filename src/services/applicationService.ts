@@ -10,8 +10,8 @@ headers.append("Authorization", `Bearer ${token}`);
 headers.append("Content-Type", "application/json");
 
 
-export const getApplications = async () => {
-  let response = await fetch(`${api}`, {
+export const getApplications = async (userid: string) => {
+  let response = await fetch(`${api}/${userid}`, {
     method: "GET",
     headers,
   });
