@@ -1,16 +1,8 @@
-import type {DateInfo} from "@/stores/application";
-
+import { createHeader } from "@/utils/fetchUtils";
 const api = "http://localhost:3000/application";
 
-let token = localStorage.getItem("user-token");
-
-const headers = new Headers();
-
-headers.append("Authorization", `Bearer ${token}`);
-headers.append("Content-Type", "application/json");
-
-
 export const getApplications = async (userid: string) => {
+  const headers = createHeader();
   let response = await fetch(`${api}/${userid}`, {
     method: "GET",
     headers,
@@ -20,15 +12,17 @@ export const getApplications = async (userid: string) => {
 
 // create new application
 export const addNewApplication = async (application: object) => {
+  const headers = createHeader();
   let response = await fetch(`${api}/create`, {
     method: "POST",
     headers,
     body: JSON.stringify(application),
   });
-  return await response.json()
+  return await response.json();
 };
 
 export const updateApplication = async (id: string, update: object) => {
+  const headers = createHeader();
   let response = await fetch(`${api}/${id}`, {
     method: "PUT",
     headers,
@@ -38,6 +32,7 @@ export const updateApplication = async (id: string, update: object) => {
 };
 
 export const removeApplications = async (idsToRemove: Array<string>) => {
+  const headers = createHeader();
   let response = await fetch(`${api}`, {
     method: "DELETE",
     headers,

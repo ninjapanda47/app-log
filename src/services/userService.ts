@@ -4,6 +4,7 @@ const api = 'http://localhost:3000/user';
 export const userLogin = async (username: string, password: string) => {
     let response = await fetch(`${api}/login`, {
         method: 'POST',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },

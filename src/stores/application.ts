@@ -4,7 +4,6 @@ import * as applicationService from "@/services/applicationService";
 import * as reportService from "@/services/reportService";
 import { useUserStore } from "@/stores/user";
 import dayjs, { Dayjs } from "dayjs";
-import {removeApplications} from "@/services/applicationService";
 
 export interface AppInfo {
   _id: string;

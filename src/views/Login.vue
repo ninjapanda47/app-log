@@ -16,12 +16,21 @@
               type="password"
               required
             ></v-text-field>
-            <v-alert v-if="errorMessage"  class="mb-5" type="error" density="compact">{{ errorMessage }}</v-alert>
+            <v-alert
+              v-if="errorMessage"
+              class="mb-5"
+              type="error"
+              density="compact"
+              >{{ errorMessage }}</v-alert
+            >
             <v-btn color="primary" class="mx-auto mb-5" @click="validate">
               Submit
             </v-btn>
           </v-form>
-          <v-card-text class="text-center">To create an account, click <router-link to="/sign-in">here</router-link></v-card-text>
+          <v-card-text class="text-center"
+            >To create an account, click
+            <router-link to="/sign-in">here</router-link></v-card-text
+          >
         </v-card>
       </v-col>
     </v-row>
@@ -33,7 +42,7 @@ import { required } from "@vuelidate/validators";
 import { defineComponent } from "vue";
 import { useUserStore } from "@/stores/user";
 import * as userService from "@/services/userService";
-import {setToken} from "@/utils/setToken"
+import { setToken } from "@/utils/fetchUtils";
 export default defineComponent({
   setup() {
     const userStore = useUserStore();
@@ -41,9 +50,9 @@ export default defineComponent({
   },
   data() {
     return {
-      username: '',
-      password: '',
-      errorMessage: ''
+      username: "",
+      password: "",
+      errorMessage: "",
     };
   },
   validations() {
@@ -55,19 +64,18 @@ export default defineComponent({
   methods: {
     async validate() {
       const valid = await this.v$.$validate();
-      this.errorMessage = ''
+      this.errorMessage = "";
       if (valid) {
         const response = await userService.userLogin(
           this.username,
           this.password
         );
         if (!response.error) {
-          setToken(response.id_token)
-          this.userStore.setUser(response.user)
-          this.$router.push('reports')
-        }
-        else {
-          this.errorMessage = response.message
+          await setToken(response.id_token);
+          this.userStore.setUser(response.user);
+          this.$router.push("reports");
+        } else {
+          this.errorMessage = response.message;
         }
       } else {
       }

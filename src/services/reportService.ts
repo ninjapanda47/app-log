@@ -1,20 +1,17 @@
-import type {DateInfo} from "@/stores/application";
+import type { DateInfo } from "@/stores/application";
+import { createHeader } from "@/utils/fetchUtils";
 
 const api = "http://localhost:3000/report";
 
-let token = localStorage.getItem("user-token");
-
-const headers = new Headers();
-
-headers.append("Authorization", `Bearer ${token}`);
-headers.append("Content-Type", "application/json");
-
-
-export const getJobReport = async (dateFilter: DateInfo ) => {
-    let response = await fetch(`${api}/${dateFilter.startDate}/${dateFilter.endDate}`, {
-        method: "GET",
-        headers,
-    });
-    return await response.json();
+export const getJobReport = async (dateFilter: DateInfo) => {
+    const headers = createHeader()
+  let response = await fetch(
+    `${api}/${dateFilter.startDate}/${dateFilter.endDate}`,
+    {
+      method: "GET",
+      headers,
+      credentials: "include",
+    }
+  );
+  return await response.json();
 };
-
