@@ -1,10 +1,9 @@
-const api = 'http://localhost:3000/user';
+const api = 'http://localhost:3000/users';
 
 // Login
 export const userLogin = async (username: string, password: string) => {
     let response = await fetch(`${api}/login`, {
         method: 'POST',
-        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -16,7 +15,7 @@ export const userLogin = async (username: string, password: string) => {
 
 // create login
 export const createNewUserLogin = async (username: string, email: string, password: string) => {
-    let response = await fetch(`${api}/create`, {
+    let response = await fetch(`${api}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

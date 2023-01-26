@@ -1,5 +1,5 @@
 import { createHeader } from "@/utils/fetchUtils";
-const api = "http://localhost:3000/application";
+const api = "http://localhost:3000/applications";
 
 export const getApplications = async (userid: string) => {
   const headers = createHeader();
@@ -13,7 +13,7 @@ export const getApplications = async (userid: string) => {
 // create new application
 export const addNewApplication = async (application: object) => {
   const headers = createHeader();
-  let response = await fetch(`${api}/create`, {
+  let response = await fetch(`${api}`, {
     method: "POST",
     headers,
     body: JSON.stringify(application),
