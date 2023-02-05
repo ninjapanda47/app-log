@@ -1,55 +1,85 @@
 <template>
   <div>
     <v-row class="mt-5">
-      <v-col cols="6"> <v-tooltip text="Select applications to delete">
-        <template v-slot:activator="{ props }">
-          <v-btn  prepend-icon="mdi-minus"
-                  color="error"
-                  v-bind="props"
-                  @click="deleteApps">Delete</v-btn>
-        </template>
-      </v-tooltip>
+      <v-col cols="8" class="pb-0">
+        <v-tooltip text="Select applications to delete">
+          <template v-slot:activator="{ props }">
+            <v-btn
+              prepend-icon="mdi-minus"
+              color="error"
+              v-bind="props"
+              @click="deleteApps"
+              >Delete</v-btn
+            >
+          </template>
+        </v-tooltip>
       </v-col>
-      <v-col cols="6" class="text-right">    <v-btn
-          prepend-icon="mdi-plus"
-          color="success"
-          @click="createDialog = true"    >Add</v-btn> </v-col>
+      <v-col cols="4" class="text-right pb-0">
+        <div class="d-flex">
+            <v-text-field
+              label="Company Name"
+              v-model="searchValue"
+              density="compact"
+              single-line
+              class="mr-5"
+            ></v-text-field><v-btn
+            prepend-icon="mdi-plus"
+            color="success"
+            class="mt-1"
+            @click="createDialog = true"
+            >Add</v-btn
+          >
+        </div>
+      </v-col>
     </v-row>
-<v-row class="mb-5">
-  <v-col cols="12">   <EasyDataTable  table-class-name="customize-table" :headers="headers" :items="applicationStore.applications" :sort-by="sortBy"
-                            :sort-type="sortType" v-model:items-selected="itemsSelected">
-    <template #item-dateApplied="{ dateApplied }">
-      {{ formatDate(dateApplied) }}
-    </template>
-    <template #item-status="item"> <status-chip :app="item"></status-chip></template>
-    <template #item-jobUrl="item"><custom-link :app="item"></custom-link></template>
-    <template #item-action="item">
-      <v-btn
-          size="x-small"
-          icon="mdi-pencil"
-          color="success"
-          class="mr-2"
-          @click="setAppToUpdate(item)"
-      ></v-btn> <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
-    </template>
-  </EasyDataTable></v-col>
-</v-row>
+    <v-row class="mb-5">
+      <v-col cols="12">
+        <EasyDataTable
+          table-class-name="customize-table"
+          :headers="headers"
+          :items="applicationStore.applications"
+          :sort-by="sortBy"
+          :sort-type="sortType"
+          v-model:items-selected="itemsSelected"
+          :search-field="searchField"
+          :search-value="searchValue"
+        >
+          <template #item-dateApplied="{ dateApplied }">
+            {{ formatDate(dateApplied) }}
+          </template>
+          <template #item-status="item">
+            <status-chip :app="item"></status-chip
+          ></template>
+          <template #item-jobUrl="item"
+            ><custom-link :app="item"></custom-link
+          ></template>
+          <template #item-action="item">
+            <v-btn
+              size="x-small"
+              icon="mdi-pencil"
+              color="success"
+              class="mr-2"
+              @click="setAppToUpdate(item)"
+            ></v-btn>
+            <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
+          </template> </EasyDataTable
+      ></v-col>
+    </v-row>
     <v-row>
-      <v-dialog
-          v-model="updateDialog"
-      >
-      <ApplicationUpdateView class="updateForm" @close="updateDialog = false"/></v-dialog>
+      <v-dialog v-model="updateDialog">
+        <ApplicationUpdateView class="updateForm" @close="updateDialog = false"
+      /></v-dialog>
     </v-row>
-    <v-row justify="center"><v-dialog
-        scrollable
-        v-model="createDialog"
-    ><ApplicationForm @close="createDialog = false"/></v-dialog></v-row>
+    <v-row justify="center"
+      ><v-dialog scrollable v-model="createDialog"
+        ><ApplicationForm @close="createDialog = false" /></v-dialog
+    ></v-row>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useApplicationStore} from "@/stores/application";
-import type { AppInfo } from "@/stores/application"
+import { useApplicationStore } from "@/stores/application";
+import type { AppInfo } from "@/stores/application";
 import dayjs from "dayjs";
 import ApplicationUpdateView from "@/views/ApplicationUpdateView.vue";
 import StatusChip from "@/views/StatusChip.vue";
@@ -62,7 +92,10 @@ export default defineComponent({
     return { applicationStore };
   },
   components: {
-    ApplicationUpdateView, StatusChip, CustomLink, ApplicationForm
+    ApplicationUpdateView,
+    StatusChip,
+    CustomLink,
+    ApplicationForm,
   },
   async mounted() {
     await this.applicationStore.fetchAndSetApplications();
@@ -73,6 +106,8 @@ export default defineComponent({
       updateDialog: false,
       sortBy: "dateApplied",
       sortType: "desc",
+      searchField: "companyName",
+      searchValue: "",
       itemsSelected: [] as AppInfo[],
       headers: [
         { text: "Company Name", value: "companyName", width: 150 },
@@ -80,29 +115,28 @@ export default defineComponent({
         { text: "Job Url", value: "jobUrl", width: 400 },
         { text: "Date Applied", value: "dateApplied", sortable: true },
         { text: "Status", value: "status", sortable: true },
-        { text: "Action", value: 'action'}
+        { text: "Action", value: "action" },
       ],
     };
   },
   methods: {
     setAppToUpdate(item: AppInfo) {
-      this.applicationStore.setApplicationToUpdate(item)
-      this.updateDialog = true
+      this.applicationStore.setApplicationToUpdate(item);
+      this.updateDialog = true;
     },
     async deleteApps() {
-      let idsToRemove = [] as string[]
+      let idsToRemove = [] as string[];
       this.itemsSelected.forEach((item) => {
-        idsToRemove.push(item._id)
-      })
-      await this.applicationStore.removeApplications(idsToRemove)
+        idsToRemove.push(item._id);
+      });
+      await this.applicationStore.removeApplications(idsToRemove);
     },
     formatDate(dateString: string) {
       if (dateString) {
         const date = dayjs(dateString);
         return date.format("MM/DD/YYYY");
-      }
-      else {
-        return ''
+      } else {
+        return "";
       }
     },
   },
