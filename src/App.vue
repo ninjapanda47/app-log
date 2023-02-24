@@ -53,7 +53,7 @@
 import { defineComponent, ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import ErrorDialog from "@/views/ErrorDialog.vue";
+import ErrorDialog from "@/components/ErrorDialog.vue";
 
 export default defineComponent({
   setup() {

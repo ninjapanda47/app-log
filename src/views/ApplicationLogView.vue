@@ -8,7 +8,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import ApplicationTable from "@/views/ApplicationTable.vue";
+import ApplicationTable from "@/components/ApplicationTable.vue";
 
 export default defineComponent({
   setup() {

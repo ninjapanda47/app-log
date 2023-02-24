@@ -81,10 +81,10 @@ import { defineComponent } from "vue";
 import { useApplicationStore } from "@/stores/application";
 import type { AppInfo } from "@/stores/application";
 import dayjs from "dayjs";
-import ApplicationUpdateView from "@/views/ApplicationUpdateView.vue";
-import StatusChip from "@/views/StatusChip.vue";
-import CustomLink from "@/views/CustomLink.vue";
-import ApplicationForm from "@/views/ApplicationForm.vue";
+import ApplicationUpdateView from "@/components/ApplicationUpdateView.vue";
+import StatusChip from "@/components/StatusChip.vue";
+import CustomLink from "@/components/CustomLink.vue";
+import ApplicationForm from "@/components/ApplicationForm.vue";
 
 export default defineComponent({
   setup() {

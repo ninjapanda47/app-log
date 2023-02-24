@@ -17,6 +17,7 @@
                     'In Process',
                     'Rejected',
                     'Received Offer',
+                    'Declined'
                   ]"
                 ></v-select></v-col
             ></v-row>
