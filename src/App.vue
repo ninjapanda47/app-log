@@ -30,11 +30,11 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main class="main-wrapper">
+    <v-main >
       <error-dialog></error-dialog>
       <router-view></router-view>
     </v-main>
-    <v-footer>
+    <v-footer class="footer-height">
       <v-row class="justify-center">
         <v-col class="text-center">
           {{ new Date().getFullYear() }} —
@@ -88,7 +88,7 @@ export default defineComponent({
 });
 </script>
 <style>
-.main-wrapper {
-  min-height: 600px;
+.footer-height {
+  max-height: 50px;
 }
 </style>
