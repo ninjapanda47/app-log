@@ -61,7 +61,7 @@ export const useApplicationStore = defineStore("application", () => {
     };
     try {
       const response = await reportService.getJobReport(formattedDate);
-      if (response.total) {
+      if (response.total || response.total === 0) {
         report.value = response;
       } else {
         const { statusCode, error, message } = response;
