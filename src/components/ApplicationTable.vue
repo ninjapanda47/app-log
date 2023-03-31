@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row class="mt-5">
-      <v-col cols="8" class="pb-0">
+      <v-col cols="6" class="pb-0">
         <v-tooltip text="Select applications to delete">
           <template v-slot:activator="{ props }">
             <v-btn
@@ -14,15 +14,23 @@
           </template>
         </v-tooltip>
       </v-col>
-      <v-col cols="4" class="text-right pb-0">
+      <v-col cols="6" class="text-right pb-0">
         <div class="d-flex">
-            <v-text-field
-              label="Company Name"
-              v-model="searchValue"
-              density="compact"
-              single-line
-              class="mr-5"
-            ></v-text-field><v-btn
+          <v-text-field
+            label="Company Name"
+            v-model="searchValue"
+            density="compact"
+            single-line
+          ></v-text-field>
+          <v-select
+            v-model="statusType"
+            label="Status"
+            variant="solo"
+            density="compact"
+            class="select-dropdown mx-4"
+            :items="['', 'Applied', 'In Process', 'Rejected', 'Received Offer']"
+          ></v-select>
+          <v-btn
             prepend-icon="mdi-plus"
             color="success"
             class="mt-1"
@@ -43,6 +51,7 @@
           v-model:items-selected="itemsSelected"
           :search-field="searchField"
           :search-value="searchValue"
+          :filter-options="filterOptions"
         >
           <template #item-dateApplied="{ dateApplied }">
             {{ formatDate(dateApplied) }}
@@ -85,6 +94,7 @@ import ApplicationUpdateView from "@/components/ApplicationUpdateView.vue";
 import StatusChip from "@/components/StatusChip.vue";
 import CustomLink from "@/components/CustomLink.vue";
 import ApplicationForm from "@/components/ApplicationForm.vue";
+import type { FilterOption } from "vue3-easy-data-table";
 
 export default defineComponent({
   setup() {
@@ -100,10 +110,24 @@ export default defineComponent({
   async mounted() {
     await this.applicationStore.fetchAndSetApplications();
   },
+  computed: {
+    filterOptions(FilterOption: []) {
+      const filterOptionsArray: FilterOption[] = [];
+      if (this.statusType !== "") {
+        filterOptionsArray.push({
+          field: "status",
+          comparison: "=",
+          criteria: this.statusType,
+        });
+      }
+      return filterOptionsArray;
+    },
+  },
   data() {
     return {
       createDialog: false,
       updateDialog: false,
+      statusType: "",
       sortBy: "dateApplied",
       sortType: "desc",
       searchField: "companyName",
@@ -143,6 +167,9 @@ export default defineComponent({
 });
 </script>
 <style>
+.select-dropdown {
+  width: 50px;
+}
 .customize-table {
   --easy-table-border: 1px solid #bbbbbb;
   --easy-table-row-border: 1px solid #bbbbbb;

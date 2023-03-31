@@ -23,7 +23,7 @@ export default defineComponent({
       } else if (this.app?.status === "In Process") {
         return "chip blue";
       } else if (this.app?.status === "Received Offer") {
-        return "chip green";
+        return "chip green small-font";
       } else {
         return "chip red";
       }
@@ -41,6 +41,10 @@ export default defineComponent({
   line-height: 30px;
   border-radius: 20px;
   color: white;
+}
+
+.small-font {
+  font-size: 0.7rem;
 }
 
 .gray {
