@@ -53,6 +53,9 @@
           :search-value="searchValue"
           :filter-options="filterOptions"
         >
+          <template #header-flagged="header">
+            <v-icon color="secondary" icon="mdi-star"></v-icon><v-checkbox class="custom pb-2" v-model="flagged"></v-checkbox>
+          </template>
           <template #item-dateApplied="{ dateApplied }">
             {{ formatDate(dateApplied) }}
           </template>
@@ -70,8 +73,10 @@
               class="mr-2"
               @click="setAppToUpdate(item)"
             ></v-btn>
-            <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
-          </template> </EasyDataTable
+          </template>
+        <template  #item-flagged="item">
+          <v-icon color="secondary" v-if="item.flag" icon="mdi-star"></v-icon>
+        </template></EasyDataTable
       ></v-col>
     </v-row>
     <v-row>
@@ -120,6 +125,13 @@ export default defineComponent({
           criteria: this.statusType,
         });
       }
+      if (this.flagged) {
+        filterOptionsArray.push({
+          field: "flag",
+          criteria: this.flagged.toString(),
+          comparison: (value, criteria): boolean => (value === true),
+        });
+      }
       return filterOptionsArray;
     },
   },
@@ -127,6 +139,7 @@ export default defineComponent({
     return {
       createDialog: false,
       updateDialog: false,
+      flagged: false,
       statusType: "",
       sortBy: "dateApplied",
       sortType: "desc",
@@ -136,10 +149,11 @@ export default defineComponent({
       headers: [
         { text: "Company Name", value: "companyName", width: 150 },
         { text: "Job Title", value: "jobTitle", width: 200 },
-        { text: "Job Url", value: "jobUrl", width: 400 },
+        { text: "Job Url", value: "jobUrl", width: 300 },
         { text: "Date Applied", value: "dateApplied", sortable: true },
-        { text: "Status", value: "status", sortable: true },
-        { text: "Action", value: "action" },
+        { text: "Status", value: "status", width: 125, sortable: true },
+        { text: "Action", value: "action", width: 50 },
+        {text: "Flagged", value: "flagged", width: 75}
       ],
     };
   },
@@ -167,8 +181,8 @@ export default defineComponent({
 });
 </script>
 <style>
-.select-dropdown {
-  width: 50px;
+.custom {
+  height: 55px;
 }
 .customize-table {
   --easy-table-border: 1px solid #bbbbbb;
@@ -179,14 +193,14 @@ export default defineComponent({
   --easy-table-header-font-color: #a2a2a2;
   --easy-table-header-background-color: #212121;
 
-  --easy-table-header-item-padding: 10px 15px;
+  --easy-table-header-item-padding: 5px 5px;
 
   --easy-table-body-row-font-color: #a2a2a2;
   --easy-table-body-row-background-color: #212121;
   --easy-table-body-row-height: 50px;
   --easy-table-body-row-font-size: 14px;
 
-  --easy-table-body-item-padding: 10px 15px;
+  --easy-table-body-item-padding: 5px 5px;
   --easy-table-body-row-hover-font-color: #a2a2a2;
   --easy-table-body-row-hover-background-color: #212121;
 
